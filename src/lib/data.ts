@@ -473,50 +473,73 @@ export const rideRequests: RideRequest[] = [
 // ─── ESTADÍSTICAS VENDEDOR ─────────────────────────────────────
 export interface SellerStats {
   totalSalesARS: number;
+  todaySales?: number;
   ordersThisMonth: number;
+  activeOrders?: number;
   avgRating: number;
+  rating?: number;
   pendingOrders: number;
   topProduct: string;
   conversionRate: number;
   activeListings: number;
+  views?: number;
 }
 
 export const sellerStats: SellerStats = {
   totalSalesARS: 847500,
+  todaySales: 184500,
   ordersThisMonth: 127,
+  activeOrders: 6,
   avgRating: 4.8,
+  rating: 4.8,
   pendingOrders: 8,
   topProduct: "Combo Familiar Semanal",
   conversionRate: 68.4,
   activeListings: 23,
+  views: 1240,
 };
 
 // ─── COMBOS FLASH (Vendedor) ──────────────────────────────────
 export interface FlashCombo {
   id: string;
   name: string;
+  description?: string;
   priceARS: number;
+  originalPriceARS?: number;
   stock: number;
-  expiresIn: string;
+  expiresIn?: string;
+  validUntil?: string;
   sold: number;
+  category?: string;
+  logistics?: "propio" | "sumo";
 }
 
 export const flashCombos: FlashCombo[] = [
   {
     id: "flash-001",
-    name: "Combo Verano: Helado + Medialunas",
+    name: "Combo Familiar Helado — 2 cuartos kg",
+    description: "Sabores artesanales Duomo con entrega express",
     priceARS: 7800,
+    originalPriceARS: 10500,
     stock: 30,
     expiresIn: "2h 45min",
+    validUntil: "Hoy 23:59",
     sold: 18,
+    category: "gastronomia",
+    logistics: "sumo",
   },
   {
     id: "flash-002",
     name: "Pack Gaming: Mouse + Pad + Auricular",
+    description: "Periféricos de alta velocidad para gamers",
     priceARS: 32000,
+    originalPriceARS: 42000,
     stock: 10,
     expiresIn: "5h 10min",
+    validUntil: "Hoy 20:00",
     sold: 4,
+    category: "tecnologia",
+    logistics: "propio",
   },
 ];
 

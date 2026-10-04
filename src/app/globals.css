@@ -2,148 +2,218 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Google Fonts ─────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 :root {
-  --axo-bg: #0A0F1D;
-  --axo-card: #111827;
-  --axo-cyan: #00F2FE;
-  --axo-emerald: #00FF88;
+  --axo-blue:    #2563EB;
+  --axo-green:   #059669;
+  --axo-bg:      #F8F9FA;
+  --axo-card:    #FFFFFF;
+  --axo-border:  #E5E7EB;
+  --axo-text:    #111827;
 }
 
 @layer base {
-  * {
-    box-sizing: border-box;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
 
   body {
     background-color: var(--axo-bg);
-    color: #E2E8F0;
+    color: var(--axo-text);
+    font-family: "Inter", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #0A0F1D;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #1E293B;
-    border-radius: 2px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #00F2FE40;
-  }
+  /* Clean scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #F3F4F6; }
+  ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+
+  h1, h2, h3, h4, h5 { font-weight: 700; color: #111827; }
 }
 
 @layer components {
-  /* AXO Glow Button */
+
+  /* ── PRIMARY BUTTON — Blue CTA ─────────────────────────────── */
   .axo-btn-primary {
-    @apply bg-axo-gradient text-[#0A0F1D] font-bold rounded-xl px-6 py-3 
-           transition-all duration-200 active:scale-95 hover:shadow-axo-glow
-           focus:outline-none focus:ring-2 focus:ring-axo-cyan/50;
-    background: linear-gradient(135deg, #00F2FE 0%, #00FF88 100%);
+    @apply inline-flex items-center justify-center gap-2
+           bg-axo-cyan text-white font-semibold rounded-xl px-5 py-2.5
+           transition-all duration-200 active:scale-95
+           hover:bg-axo-cyan-dim shadow-sm hover:shadow-md
+           focus:outline-none focus:ring-2 focus:ring-axo-cyan/40;
   }
 
+  /* ── GREEN BUTTON — Purchase / Confirm ─────────────────────── */
+  .axo-btn-green {
+    @apply inline-flex items-center justify-center gap-2
+           bg-axo-emerald text-white font-semibold rounded-xl px-5 py-2.5
+           transition-all duration-200 active:scale-95
+           hover:bg-axo-emerald-dim shadow-sm hover:shadow-md
+           focus:outline-none focus:ring-2 focus:ring-axo-emerald/40;
+  }
+
+  /* ── SECONDARY BUTTON ──────────────────────────────────────── */
   .axo-btn-secondary {
-    @apply bg-transparent border border-axo-border text-axo-text font-medium rounded-xl px-6 py-3
-           transition-all duration-200 hover:border-axo-cyan/50 hover:text-axo-cyan
+    @apply inline-flex items-center justify-center gap-2
+           bg-white border border-axo-border text-axo-text font-medium rounded-xl px-5 py-2.5
+           transition-all duration-200 hover:border-axo-cyan hover:text-axo-cyan hover:bg-axo-blue-light
            focus:outline-none focus:ring-2 focus:ring-axo-cyan/30;
   }
 
+  /* ── GHOST BUTTON ──────────────────────────────────────────── */
   .axo-btn-ghost {
-    @apply bg-axo-bg-card text-axo-muted font-medium rounded-xl px-4 py-2
-           transition-all duration-200 hover:text-axo-text hover:bg-axo-bg-card-hover
+    @apply inline-flex items-center justify-center gap-2
+           bg-transparent text-axo-muted font-medium rounded-xl px-4 py-2
+           transition-all duration-200 hover:text-axo-cyan hover:bg-axo-blue-light
            focus:outline-none;
   }
 
-  /* AXO Card */
+  /* ── CARD — Base ───────────────────────────────────────────── */
   .axo-card {
-    @apply bg-axo-bg-card border border-axo-border rounded-2xl
-           transition-all duration-200 hover:border-axo-cyan/20
-           shadow-axo-card;
+    @apply bg-white border border-axo-border rounded-2xl shadow-axo-card
+           transition-all duration-200 hover:shadow-axo-card-md hover:border-axo-cyan/30;
   }
 
+  /* ── CARD GLOW — accented card (subtle blue top tint) ─────── */
   .axo-card-glow {
-    @apply axo-card;
-    background: radial-gradient(ellipse at top left, rgba(0, 242, 254, 0.06) 0%, transparent 60%),
-                #111827;
+    @apply bg-white border border-axo-border rounded-2xl shadow-axo-card
+           transition-all duration-200;
+    background: linear-gradient(to bottom right, #EEF2FF 0%, #FFFFFF 40%);
   }
 
-  /* Badge */
+  /* ── PRODUCT CARD ──────────────────────────────────────────── */
+  .axo-product-card {
+    @apply bg-white border border-axo-border rounded-2xl shadow-axo-card
+           hover:shadow-axo-card-lg hover:-translate-y-0.5
+           transition-all duration-200 overflow-hidden cursor-pointer;
+  }
+
+  /* ── BADGE BASE ────────────────────────────────────────────── */
   .axo-badge {
     @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
   }
 
   .axo-badge-cyan {
-    @apply axo-badge bg-axo-cyan/10 text-axo-cyan border border-axo-cyan/20;
+    @apply axo-badge bg-axo-blue-light text-axo-cyan border border-axo-cyan/20;
   }
 
   .axo-badge-emerald {
-    @apply axo-badge bg-axo-emerald/10 text-axo-emerald border border-axo-emerald/20;
+    @apply axo-badge bg-axo-emerald-light text-axo-emerald border border-axo-emerald/20;
   }
 
   .axo-badge-amber {
-    @apply axo-badge bg-amber-500/10 text-amber-400 border border-amber-500/20;
+    @apply axo-badge bg-amber-50 text-amber-700 border border-amber-200;
   }
 
   .axo-badge-red {
-    @apply axo-badge bg-red-500/10 text-red-400 border border-red-500/20;
+    @apply axo-badge bg-red-50 text-red-600 border border-red-200;
   }
 
   .axo-badge-purple {
-    @apply axo-badge bg-purple-500/10 text-purple-400 border border-purple-500/20;
+    @apply axo-badge bg-purple-50 text-purple-700 border border-purple-200;
   }
 
-  /* Input */
+  /* ── DISCOUNT BADGE — large ────────────────────────────────── */
+  .axo-discount-badge {
+    @apply inline-flex items-center justify-center
+           bg-axo-emerald text-white font-black text-xs rounded-lg px-2 py-1;
+  }
+
+  /* ── INPUT ─────────────────────────────────────────────────── */
   .axo-input {
-    @apply w-full bg-axo-bg-card border border-axo-border rounded-xl px-4 py-3 text-axo-text
-           placeholder:text-axo-muted focus:outline-none focus:border-axo-cyan/50 
-           focus:ring-1 focus:ring-axo-cyan/30 transition-all duration-200;
+    @apply w-full bg-white border border-axo-border rounded-xl px-4 py-2.5 text-axo-text
+           placeholder:text-axo-muted-2 text-sm
+           focus:outline-none focus:border-axo-cyan focus:ring-2 focus:ring-axo-cyan/20
+           transition-all duration-200;
   }
 
-  /* Section title */
+  /* ── SEARCH INPUT — large marketplace style ─────────────────  */
+  .axo-search-input {
+    @apply w-full bg-white border-2 border-axo-border rounded-2xl
+           pl-12 pr-4 py-3.5 text-axo-text text-sm font-medium
+           placeholder:text-axo-muted-2
+           focus:outline-none focus:border-axo-cyan focus:ring-2 focus:ring-axo-cyan/20
+           transition-all duration-200 shadow-axo-card;
+  }
+
+  /* ── SECTION TITLE ─────────────────────────────────────────── */
   .axo-section-title {
-    @apply text-lg font-bold text-axo-text mb-4;
+    @apply text-xl font-bold text-axo-text mb-1;
   }
 
-  /* Gradient text */
+  /* ── GRADIENT TEXT ─────────────────────────────────────────── */
   .axo-gradient-text {
-    background: linear-gradient(135deg, #00F2FE 0%, #00FF88 100%);
+    background: linear-gradient(135deg, #2563EB 0%, #059669 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  /* Stat value */
+  /* ── STAT VALUE ────────────────────────────────────────────── */
   .axo-stat-value {
-    @apply text-2xl font-black tracking-tight;
+    @apply text-2xl font-black tracking-tight text-axo-text;
+  }
+
+  /* ── SECTION DIVIDER ───────────────────────────────────────── */
+  .axo-divider {
+    @apply h-px bg-axo-border w-full;
+  }
+
+  /* ── PILL TAB ──────────────────────────────────────────────── */
+  .axo-tab {
+    @apply flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-xl
+           border transition-all duration-200 whitespace-nowrap cursor-pointer;
+  }
+
+  .axo-tab-active {
+    @apply axo-tab bg-axo-blue-light border-axo-cyan text-axo-cyan;
+  }
+
+  .axo-tab-inactive {
+    @apply axo-tab bg-white border-axo-border text-axo-muted
+           hover:border-axo-cyan/40 hover:text-axo-cyan hover:bg-axo-blue-light;
+  }
+
+  /* ── CATEGORY CHIP ─────────────────────────────────────────── */
+  .axo-chip {
+    @apply flex flex-col items-center gap-1.5 px-4 py-3 rounded-2xl
+           bg-white border border-axo-border text-axo-muted text-xs font-semibold
+           hover:border-axo-cyan hover:text-axo-cyan hover:bg-axo-blue-light
+           transition-all duration-200 cursor-pointer shadow-sm;
+  }
+
+  /* ── PRICE DISPLAY ─────────────────────────────────────────── */
+  .axo-price {
+    @apply text-2xl font-black text-axo-text tracking-tight;
+  }
+
+  .axo-price-original {
+    @apply text-sm text-axo-muted line-through;
   }
 }
 
-/* Radar animation for Sumo Envíos */
+/* ── Animations ──────────────────────────────────────────────── */
 @keyframes radarSpin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+.radar-spinner { animation: radarSpin 4s linear infinite; }
 
-.radar-spinner {
-  animation: radarSpin 4s linear infinite;
-}
-
-/* Ping animation for map dots */
 @keyframes ping-slow {
-  75%, 100% {
-    transform: scale(2);
-    opacity: 0;
-  }
+  75%, 100% { transform: scale(2); opacity: 0; }
 }
 .animate-ping-slow {
   animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* Marquee / scrolling text for bridge monitor banner */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 20s linear infinite;
 }

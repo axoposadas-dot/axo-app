@@ -7,22 +7,16 @@ export const metadata: Metadata = {
     "AXO by Megasion Desarrollos INC. — Marketplace, movilidad y logística para Posadas, Encarnación y la región.",
   keywords: ["AXO", "Posadas", "Encarnación", "marketplace", "delivery", "movilidad", "Misiones"],
   authors: [{ name: "Megasion Desarrollos INC." }],
-  icons: {
-    icon: "/favicon.ico",
-  },
+  icons: { icon: "/favicon.ico" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0A0F1D",
+  themeColor: "#2563EB",
   width: "device-width",
   initialScale: 1,
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
       <head>

@@ -14,12 +14,12 @@ export function Badge({ children, variant = "default", className }: BadgeProps) 
       className={cn(
         "axo-badge",
         {
-          "axo-badge-cyan": variant === "cyan",
+          "axo-badge-cyan":    variant === "cyan",
           "axo-badge-emerald": variant === "emerald",
-          "axo-badge-amber": variant === "amber",
-          "axo-badge-red": variant === "red",
-          "axo-badge-purple": variant === "purple",
-          "bg-axo-border text-axo-muted": variant === "default",
+          "axo-badge-amber":   variant === "amber",
+          "axo-badge-red":     variant === "red",
+          "axo-badge-purple":  variant === "purple",
+          "bg-axo-bg border border-axo-border text-axo-muted": variant === "default",
         },
         className
       )}
