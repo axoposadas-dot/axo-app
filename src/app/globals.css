@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --axo-bg: #0A0F1D;
+  --axo-card: #111827;
+  --axo-cyan: #00F2FE;
+  --axo-emerald: #00FF88;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--axo-bg);
+    color: #E2E8F0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0A0F1D;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1E293B;
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00F2FE40;
+  }
+}
+
+@layer components {
+  /* AXO Glow Button */
+  .axo-btn-primary {
+    @apply bg-axo-gradient text-[#0A0F1D] font-bold rounded-xl px-6 py-3 
+           transition-all duration-200 active:scale-95 hover:shadow-axo-glow
+           focus:outline-none focus:ring-2 focus:ring-axo-cyan/50;
+    background: linear-gradient(135deg, #00F2FE 0%, #00FF88 100%);
+  }
+
+  .axo-btn-secondary {
+    @apply bg-transparent border border-axo-border text-axo-text font-medium rounded-xl px-6 py-3
+           transition-all duration-200 hover:border-axo-cyan/50 hover:text-axo-cyan
+           focus:outline-none focus:ring-2 focus:ring-axo-cyan/30;
+  }
+
+  .axo-btn-ghost {
+    @apply bg-axo-bg-card text-axo-muted font-medium rounded-xl px-4 py-2
+           transition-all duration-200 hover:text-axo-text hover:bg-axo-bg-card-hover
+           focus:outline-none;
+  }
+
+  /* AXO Card */
+  .axo-card {
+    @apply bg-axo-bg-card border border-axo-border rounded-2xl
+           transition-all duration-200 hover:border-axo-cyan/20
+           shadow-axo-card;
+  }
+
+  .axo-card-glow {
+    @apply axo-card;
+    background: radial-gradient(ellipse at top left, rgba(0, 242, 254, 0.06) 0%, transparent 60%),
+                #111827;
+  }
+
+  /* Badge */
+  .axo-badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+
+  .axo-badge-cyan {
+    @apply axo-badge bg-axo-cyan/10 text-axo-cyan border border-axo-cyan/20;
+  }
+
+  .axo-badge-emerald {
+    @apply axo-badge bg-axo-emerald/10 text-axo-emerald border border-axo-emerald/20;
+  }
+
+  .axo-badge-amber {
+    @apply axo-badge bg-amber-500/10 text-amber-400 border border-amber-500/20;
+  }
+
+  .axo-badge-red {
+    @apply axo-badge bg-red-500/10 text-red-400 border border-red-500/20;
+  }
+
+  .axo-badge-purple {
+    @apply axo-badge bg-purple-500/10 text-purple-400 border border-purple-500/20;
+  }
+
+  /* Input */
+  .axo-input {
+    @apply w-full bg-axo-bg-card border border-axo-border rounded-xl px-4 py-3 text-axo-text
+           placeholder:text-axo-muted focus:outline-none focus:border-axo-cyan/50 
+           focus:ring-1 focus:ring-axo-cyan/30 transition-all duration-200;
+  }
+
+  /* Section title */
+  .axo-section-title {
+    @apply text-lg font-bold text-axo-text mb-4;
+  }
+
+  /* Gradient text */
+  .axo-gradient-text {
+    background: linear-gradient(135deg, #00F2FE 0%, #00FF88 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Stat value */
+  .axo-stat-value {
+    @apply text-2xl font-black tracking-tight;
+  }
+}
+
+/* Radar animation for Sumo Envíos */
+@keyframes radarSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.radar-spinner {
+  animation: radarSpin 4s linear infinite;
+}
+
+/* Ping animation for map dots */
+@keyframes ping-slow {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+.animate-ping-slow {
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
