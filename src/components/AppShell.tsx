@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import {
   ShoppingCart, Store, Package, Search, MapPin,
-  Bell, ChevronDown, X, Menu, Zap, User, TrendingUp,
+  Bell, ChevronDown, X, Menu, Zap, User, Check
 } from "lucide-react";
 import { MarketView } from "@/components/views/MarketView";
 import { MoveView } from "@/components/views/MoveView";
@@ -15,45 +15,38 @@ import { Caso1View } from "@/components/cases/Caso1View";
 import { Caso2View } from "@/components/cases/Caso2View";
 import { Caso3View } from "@/components/cases/Caso3View";
 import { DemoProvider, useDemo } from "@/lib/demoContext";
+import { ZONAS_POSADAS, DRINK_CATEGORIES } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 type Role = "buyer" | "seller" | "driver";
 type BuyerMode = "market" | "move";
 
-// ── Category chips ────────────────────────────────────────────
-const CATEGORIES = [
-  { emoji: "🍨", label: "Gastronomía" },
-  { emoji: "💻", label: "Tecnología" },
-  { emoji: "🚗", label: "Movilidad" },
-  { emoji: "🛒", label: "Supermercado" },
-  { emoji: "🥖", label: "Panificados" },
-  { emoji: "🌉", label: "Frontera" },
-];
-
 // ── Role tabs ─────────────────────────────────────────────────
 const ROLES = [
-  { key: "buyer" as Role,  icon: <ShoppingCart size={15} />, label: "Comprador",  desc: "AXO Market & Move", color: "text-axo-cyan" },
-  { key: "seller" as Role, icon: <Store size={15} />,        label: "Vendedor",   desc: "Mi Negocio AXO",   color: "text-axo-emerald" },
-  { key: "driver" as Role, icon: <Package size={15} />,      label: "Conductor",  desc: "Sumo Envíos",      color: "text-purple-700" },
+  { key: "buyer" as Role,  icon: <ShoppingCart size={15} />, label: "Comprador",    desc: "Catálogo Express & Delivery", color: "text-axo-cyan" },
+  { key: "seller" as Role, icon: <Store size={15} />,        label: "Distribuidor", desc: "Deli Drinks Posadas",         color: "text-axo-emerald" },
+  { key: "driver" as Role, icon: <Package size={15} />,      label: "Repartidor",   desc: "Logística Express Posadas",   color: "text-purple-700" },
 ];
 
-// ── Bridge status mini-banner (rotating) ─────────────────────
-const BRIDGE_ITEMS = [
-  "🌉 Puente Posadas–Encarnación: FLUIDO · 8 min espera",
-  "🟢 Aduana abierta · Control normal",
-  "💱 USD 1 = ARS 1.285 · Tipo de cambio referencial",
-  "📦 Franquicia exenta: USD 300 por persona",
-  "⚡ AXO Move disponible al puente — pedí tu traslado ahora",
+// ── Top ticker items ──────────────────────────────────────────
+const TICKER_ITEMS = [
+  "🍺 AXO Bebidas Express: Entregas en 20–35 min en toda Posadas",
+  "🧊 Hielo en cubos disponible · Bebidas 100% frías garantizadas",
+  "🚀 Envíos gratis desde $30.000 en toda la ciudad",
+  "📱 Pedidos ultrarrápidos con confirmación directa por WhatsApp",
+  "💳 Pagá con MercadoPago, Transferencia o Efectivo al recibir",
+  "🏪 Distribuidor Oficial: Deli Drinks Posadas / Distribuidora JB",
 ];
 
 function AppShellInner() {
   const { activeCase, isDemoActive, caseConfig } = useDemo();
   const [activeRole, setActiveRole] = useState<Role>("buyer");
   const [buyerMode, setBuyerMode] = useState<BuyerMode>("market");
+  const [selectedZona, setSelectedZona] = useState<string>("Villa Sarita");
+  const [zonaModalOpen, setZonaModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
-  const [cartCount] = useState(2);
   const searchRef = useRef<HTMLInputElement>(null);
 
   // Auto-route when demo activates
@@ -69,10 +62,10 @@ function AppShellInner() {
   return (
     <div className="min-h-screen bg-axo-bg flex flex-col font-sans">
 
-      {/* ── TOP INFO BAR — Bridge status ─────────────────────── */}
+      {/* ── TOP INFO BAR — Bebidas Express Posadas ────────────── */}
       <div className="bg-axo-cyan text-white overflow-hidden h-8 flex items-center">
-        <div className="flex animate-marquee whitespace-nowrap gap-16 text-xs font-medium">
-          {[...BRIDGE_ITEMS, ...BRIDGE_ITEMS].map((item, i) => (
+        <div className="flex animate-marquee whitespace-nowrap gap-16 text-xs font-semibold tracking-wide">
+          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
             <span key={i} className="flex items-center gap-2 pr-12">{item}</span>
           ))}
         </div>
@@ -80,29 +73,64 @@ function AppShellInner() {
 
       {/* ── MAIN HEADER ──────────────────────────────────────── */}
       <header className="sticky top-0 z-50 bg-white border-b border-axo-border shadow-sm">
-        {/* Row 1: Logo + Search + Actions */}
+        {/* Row 1: Logo + Selector Zona + Search + Actions */}
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-axo-gradient flex items-center justify-center shadow-sm">
-              <span className="text-white font-black text-lg leading-none">A</span>
+          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-axo-cyan to-axo-emerald flex items-center justify-center shadow-sm">
+              <span className="text-white font-black text-xl leading-none">🍺</span>
             </div>
-            <div className="hidden sm:block">
-              <p className="font-black text-axo-text text-xl leading-none tracking-tight">AXO</p>
-              <p className="text-[9px] text-axo-muted leading-none font-medium">Posadas · Encarnación</p>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-black text-axo-text text-xl leading-none tracking-tight">AXO</span>
+                <span className="text-[10px] font-black text-axo-emerald bg-axo-emerald-light px-1.5 py-0.5 rounded">EXPRESS</span>
+              </div>
+              <p className="text-[10px] text-axo-muted leading-tight font-medium mt-0.5">Bebidas & Conveniencia · Posadas</p>
             </div>
           </Link>
 
-          {/* Location selector */}
-          <button className="hidden md:flex items-center gap-1.5 text-xs text-axo-muted hover:text-axo-cyan transition-colors flex-shrink-0 border border-axo-border rounded-xl px-3 py-2.5 bg-axo-bg hover:border-axo-cyan">
-            <MapPin size={13} className="text-axo-cyan" />
-            <div className="text-left">
-              <p className="font-semibold text-axo-text text-[11px] leading-tight">Posadas, Misiones</p>
-              <p className="text-[10px] text-axo-muted leading-tight">Cambiar ubicación</p>
-            </div>
-            <ChevronDown size={12} className="ml-1 text-axo-muted" />
-          </button>
+          {/* Location selector (Posadas Zones) */}
+          <div className="relative">
+            <button
+              onClick={() => setZonaModalOpen(!zonaModalOpen)}
+              className="hidden md:flex items-center gap-2 text-xs text-axo-muted hover:text-axo-cyan transition-colors flex-shrink-0 border border-axo-border rounded-xl px-3 py-2 bg-axo-bg hover:border-axo-cyan"
+            >
+              <MapPin size={14} className="text-axo-cyan" />
+              <div className="text-left">
+                <p className="font-bold text-axo-text text-xs leading-tight">Posadas · {selectedZona}</p>
+                <p className="text-[10px] text-axo-muted leading-tight">Cambiar zona</p>
+              </div>
+              <ChevronDown size={13} className="ml-0.5 text-axo-muted" />
+            </button>
+
+            {/* Dropdown modal de zonas de Posadas */}
+            {zonaModalOpen && (
+              <div className="absolute left-0 top-full mt-2 w-64 bg-white border border-axo-border rounded-2xl shadow-axo-card-lg p-3 z-50 animate-slide-up">
+                <p className="text-xs font-bold text-axo-text mb-2 px-1">Elegí tu zona de entrega:</p>
+                <div className="flex flex-col gap-1 max-h-56 overflow-y-auto">
+                  {ZONAS_POSADAS.map((z) => (
+                    <button
+                      key={z}
+                      onClick={() => {
+                        setSelectedZona(z);
+                        setZonaModalOpen(false);
+                      }}
+                      className={cn(
+                        "flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-left transition-all",
+                        selectedZona === z
+                          ? "bg-axo-blue-light text-axo-cyan font-bold"
+                          : "text-axo-muted hover:bg-axo-bg hover:text-axo-text"
+                      )}
+                    >
+                      <span>📍 {z}</span>
+                      {selectedZona === z && <Check size={13} className="text-axo-cyan" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Search bar — CENTRAL */}
           <div className="flex-1 relative max-w-2xl">
@@ -119,7 +147,7 @@ function AppShellInner() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
-              placeholder="¿Qué buscás hoy en Posadas o Encarnación?"
+              placeholder="¿Qué querés tomar hoy en Posadas? Cervezas, Fernet, Vinos, Hielo..."
               className="axo-search-input"
             />
             {searchQuery && (
@@ -143,18 +171,6 @@ function AppShellInner() {
               <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500" />
             </button>
 
-            {/* Cart */}
-            {isBuyer && (
-              <button className="relative p-2.5 rounded-xl hover:bg-axo-bg transition-colors">
-                <ShoppingCart size={20} className="text-axo-muted" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full bg-axo-cyan text-white text-[10px] font-black flex items-center justify-center">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-            )}
-
             {/* Avatar */}
             <button className="flex items-center gap-2 pl-2 pr-3 py-2 rounded-xl hover:bg-axo-bg transition-colors border border-axo-border">
               <div className="w-7 h-7 rounded-full bg-axo-gradient flex items-center justify-center">
@@ -174,9 +190,10 @@ function AppShellInner() {
           </div>
         </div>
 
-        {/* Row 2: Role tabs + Category bar (desktop) */}
+        {/* Row 2: Role tabs + Category chips bar (desktop) */}
         <div className="border-t border-axo-border bg-white">
           <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between gap-4">
+            
             {/* Role switcher */}
             <div className="flex items-center gap-1 bg-axo-bg rounded-xl p-1 border border-axo-border flex-shrink-0">
               {ROLES.map((role) => (
@@ -186,7 +203,7 @@ function AppShellInner() {
                   className={cn(
                     "flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-semibold transition-all whitespace-nowrap",
                     activeRole === role.key
-                      ? "bg-white shadow-sm text-axo-cyan border border-axo-border"
+                      ? "bg-white shadow-sm text-axo-cyan border border-axo-border font-bold"
                       : "text-axo-muted hover:text-axo-text"
                   )}
                 >
@@ -199,9 +216,9 @@ function AppShellInner() {
             {/* Category chips (desktop) */}
             {isBuyer && (
               <div className="hidden md:flex items-center gap-1 overflow-x-auto">
-                {CATEGORIES.map((cat) => (
+                {DRINK_CATEGORIES.map((cat) => (
                   <button
-                    key={cat.label}
+                    key={cat.key}
                     className="flex items-center gap-1.5 text-xs font-medium text-axo-muted hover:text-axo-cyan px-3 py-1.5 rounded-xl hover:bg-axo-blue-light transition-all whitespace-nowrap"
                   >
                     <span>{cat.emoji}</span>
@@ -211,39 +228,18 @@ function AppShellInner() {
               </div>
             )}
 
-            {/* Buyer mode pills */}
-            {isBuyer && !isDemoActive && (
-              <div className="flex items-center gap-1 ml-auto">
-                <button
-                  onClick={() => setBuyerMode("market")}
-                  className={cn(
-                    "text-xs font-semibold px-3 py-1.5 rounded-xl border transition-all",
-                    buyerMode === "market"
-                      ? "bg-axo-blue-light border-axo-cyan text-axo-cyan"
-                      : "border-axo-border text-axo-muted hover:text-axo-cyan hover:border-axo-cyan/50"
-                  )}
-                >
-                  🛒 Compras
-                </button>
-                <button
-                  onClick={() => setBuyerMode("move")}
-                  className={cn(
-                    "text-xs font-semibold px-3 py-1.5 rounded-xl border transition-all",
-                    buyerMode === "move"
-                      ? "bg-purple-50 border-purple-400 text-purple-700"
-                      : "border-axo-border text-axo-muted hover:text-purple-700 hover:border-purple-400/50"
-                  )}
-                >
-                  🚗 Movilidad
-                </button>
-              </div>
-            )}
+            {/* Badge de Entrega Fría */}
+            <div className="hidden lg:flex items-center gap-2 ml-auto text-xs font-bold text-axo-emerald bg-axo-emerald-light border border-axo-emerald/20 px-3 py-1.5 rounded-xl">
+              <span className="w-2 h-2 rounded-full bg-axo-emerald animate-pulse" />
+              <span>Entrega Fría en ~30 min</span>
+            </div>
           </div>
         </div>
 
         {/* Mobile nav dropdown */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-axo-border bg-white px-4 py-3 flex flex-col gap-2 animate-slide-up shadow-lg">
+            <p className="text-[10px] text-axo-muted uppercase tracking-wider font-semibold mb-1">Cambiar Rol</p>
             {ROLES.map((role) => (
               <button
                 key={role.key}
@@ -251,7 +247,7 @@ function AppShellInner() {
                 className={cn(
                   "flex items-center gap-3 p-3 rounded-xl text-sm font-semibold transition-all text-left",
                   activeRole === role.key
-                    ? "bg-axo-blue-light text-axo-cyan border border-axo-cyan/20"
+                    ? "bg-axo-blue-light text-axo-cyan border border-axo-cyan/20 font-bold"
                     : "text-axo-muted hover:bg-axo-bg hover:text-axo-text"
                 )}
               >
@@ -262,16 +258,23 @@ function AppShellInner() {
                 </div>
               </button>
             ))}
-            {/* Mobile categories */}
+
+            {/* Mobile zone selector */}
             <div className="pt-2 border-t border-axo-border">
-              <p className="text-[10px] text-axo-muted uppercase tracking-wider font-semibold mb-2">Categorías</p>
-              <div className="flex flex-wrap gap-2">
-                {CATEGORIES.map((cat) => (
+              <p className="text-[10px] text-axo-muted uppercase tracking-wider font-semibold mb-2">Zona en Posadas</p>
+              <div className="grid grid-cols-2 gap-1.5">
+                {ZONAS_POSADAS.map((z) => (
                   <button
-                    key={cat.label}
-                    className="flex items-center gap-1 text-xs font-medium bg-axo-bg border border-axo-border rounded-xl px-3 py-1.5 text-axo-muted hover:text-axo-cyan hover:border-axo-cyan/40 transition-all"
+                    key={z}
+                    onClick={() => setSelectedZona(z)}
+                    className={cn(
+                      "py-1.5 px-2 rounded-lg text-xs font-medium text-left border transition-all truncate",
+                      selectedZona === z
+                        ? "bg-axo-blue-light border-axo-cyan text-axo-cyan font-bold"
+                        : "border-axo-border text-axo-muted"
+                    )}
                   >
-                    <span>{cat.emoji}</span> {cat.label}
+                    📍 {z}
                   </button>
                 ))}
               </div>
@@ -302,8 +305,7 @@ function AppShellInner() {
         {isDemoActive && activeCase === "caso1" && <Caso1View />}
         {isDemoActive && activeCase === "caso2" && <Caso2View />}
         {isDemoActive && activeCase === "caso3" && <Caso3View />}
-        {!isDemoActive && activeRole === "buyer" && buyerMode === "market" && <MarketView />}
-        {!isDemoActive && activeRole === "buyer" && buyerMode === "move"   && <MoveView />}
+        {!isDemoActive && activeRole === "buyer" && <MarketView />}
         {!isDemoActive && activeRole === "seller" && <SellerView />}
         {!isDemoActive && activeRole === "driver" && <DriverView />}
       </main>
@@ -317,46 +319,32 @@ function AppShellInner() {
               onClick={() => setActiveRole(role.key)}
               className={cn(
                 "flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-xl transition-all",
-                activeRole === role.key ? "text-axo-cyan" : "text-axo-muted"
+                activeRole === role.key ? "text-axo-cyan font-bold" : "text-axo-muted"
               )}
             >
               {role.icon}
-              <span className="text-[10px] font-semibold">{role.label}</span>
+              <span className="text-[10px] leading-none">{role.label}</span>
             </button>
           ))}
-          <button className="flex-1 flex flex-col items-center gap-1 py-2 px-1 rounded-xl text-axo-muted">
-            <Search size={15} />
-            <span className="text-[10px] font-semibold">Buscar</span>
-          </button>
         </div>
       </nav>
 
       {/* ── FOOTER ───────────────────────────────────────────── */}
-      <footer className="hidden md:block bg-white border-t border-axo-border">
-        <div className="max-w-7xl mx-auto px-4 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-axo-gradient flex items-center justify-center">
-              <span className="text-white font-black text-sm">A</span>
+      <footer className="border-t border-axo-border bg-white mt-auto py-8">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-axo-muted">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-lg bg-axo-gradient flex items-center justify-center text-white font-black text-xs">
+              🍺
             </div>
-            <div>
-              <p className="text-sm font-bold text-axo-text">AXO — Megasion Desarrollos INC.</p>
-              <p className="text-xs text-axo-muted">Posadas, Misiones · Encarnación, Itapúa · NEA 2027</p>
-            </div>
+            <span className="font-black text-axo-text text-sm">AXO Bebidas Express</span>
+            <span>· Posadas, Misiones, Argentina</span>
           </div>
-          <div className="flex items-center gap-6 text-xs text-axo-muted">
-            <div className="flex items-center gap-1.5">
-              <TrendingUp size={13} className="text-axo-emerald" />
-              <span>+1.200 comercios activos</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <Zap size={13} className="text-axo-cyan" />
-              <span>MVP Interactivo v2.0</span>
-            </div>
-            {isDemoActive && (
-              <span className="text-axo-cyan font-semibold">
-                ● Modo Demo — {caseConfig?.label}
-              </span>
-            )}
+          <div className="flex items-center gap-4">
+            <span>Deli Drinks / Distribuidora JB</span>
+            <span>·</span>
+            <span>Consumo responsable (+18)</span>
+            <span>·</span>
+            <span>© 2027 Megasion Desarrollos INC.</span>
           </div>
         </div>
       </footer>
