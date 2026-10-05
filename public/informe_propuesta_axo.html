@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>AXO Bebidas Express — Informe Estratégico y Financiero</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 18mm 18mm 18mm;
+      @bottom-right {
+        content: counter(page) " de " counter(pages);
+        font-size: 9pt;
+        color: #64748b;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+      background: #ffffff;
+      font-size: 10pt;
+      line-height: 1.5;
+    }
+
+    .header {
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #2563eb, #059669);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .brand-title {
+      font-size: 18pt;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #0f172a;
+    }
+
+    .brand-sub {
+      font-size: 8pt;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+    }
+
+    .doc-meta {
+      text-align: right;
+      font-size: 8.5pt;
+      color: #475569;
+    }
+
+    .doc-meta strong {
+      color: #0f172a;
+    }
+
+    h1 {
+      font-size: 16pt;
+      font-weight: 900;
+      color: #1e293b;
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+
+    .subtitle {
+      font-size: 10pt;
+      color: #475569;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 12pt;
+      font-weight: 800;
+      color: #1e3a8a;
+      border-left: 4px solid #2563eb;
+      padding-left: 8px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 12px;
+      margin-bottom: 6px;
+      page-break-after: avoid;
+    }
+
+    p {
+      margin-bottom: 8px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 10px;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 7.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-right: 4px;
+    }
+
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-amber { background: #fef3c7; color: #92400e; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px 0;
+      font-size: 9pt;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 7px 10px;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #1e293b;
+      font-weight: 800;
+    }
+
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .highlight-box {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 14px 0;
+      page-break-inside: avoid;
+    }
+
+    .highlight-box-title {
+      font-weight: 800;
+      color: #166534;
+      margin-bottom: 4px;
+      font-size: 9.5pt;
+    }
+
+    .flow-diagram {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      margin: 12px 0;
+      font-family: monospace;
+      font-size: 8.5pt;
+      line-height: 1.4;
+      color: #1e293b;
+      white-space: pre-wrap;
+    }
+
+    .page-break {
+      page-break-before: always;
+    }
+
+    .footer-sign {
+      margin-top: 30px;
+      padding-top: 14px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5pt;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ENCABEZADO -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-logo">A</div>
+      <div>
+        <div class="brand-title">AXO BEBIDAS EXPRESS</div>
+        <div class="brand-sub">Megasion Desarrollos INC. · Posadas, Misiones</div>
+      </div>
+    </div>
+    <div class="doc-meta">
+      <strong>INFORME EJECUTIVO DE FACTIBILIDAD</strong><br>
+      Fecha: Octubre 2026<br>
+      Versión: 1.0 (MVP Operativo)
+    </div>
+  </div>
+
+  <h1>Plan Estratégico, Análisis de Costos y Viabilidad Operativa</h1>
+  <div class="subtitle">Ecosistema de Entrega Rápida de Bebidas y Conveniencia para el Corredor Urbano de Posadas</div>
+
+  <!-- SECCIÓN 1 -->
+  <h2>1. Modelo de Negocio: Marketplace de Intermediación & Logística</h2>
+  <p>
+    Para evitar el riesgo de capital inmovilizado en stock y costos elevados de habilitaciones de depósitos frigoríficos propios, el modelo óptimo es el de <strong>Plataforma de Enlace Comercial (Broker)</strong>:
+  </p>
+  <ul>
+    <li><strong>AXO no compra ni vende bebidas:</strong> Conecta digitalmente al consumidor final con distribuidoras locales ya establecidas (ej. Deli Drinks, Distribuidora JB, vinotecas de Villa Sarita) y con una red de repartidores en moto.</li>
+    <li><strong>Monetización Doble:</strong>
+      <ol>
+        <li><strong>Comisión por venta:</strong> Entre el <strong>10% y el 14%</strong> sobre el valor neto de los productos comercializados.</li>
+        <li><strong>Margen logístico:</strong> Tarifa base de envío urbano ($2.500 a $3.500 ARS según distancia) con un margen retenido por la plataforma ($500 a $800 ARS por viaje gestionado).</li>
+      </ol>
+    </li>
+  </ul>
+
+  <div class="flow-diagram">
+[ Consumidor en Posadas ] ── Pide por AXO App ──> [ AXO Software ]
+                                                        │
+                      ┌─────────────────────────────────┴────────────────────────┐
+                      ▼                                                          ▼
+             [ Distribuidora Aliada ]                                   [ Cadete / Moto ]
+       (Empaqueta pedido frío y factura mercadería)              (Retira en depósito y entrega)
+  </div>
+
+  <!-- SECCIÓN 2 -->
+  <h2>2. Costos de Infraestructura y Stack Tecnológico Inicial</h2>
+  <p>
+    El código desarrollado en <strong>Next.js 15, React 19 y Tailwind CSS</strong> permite operar en una arquitectura <em>serverless</em> de costo mínimo mensual, suficiente para procesar más de 3.000 pedidos mensuales sin degradación:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Componente</th>
+        <th>Herramienta / Proveedor</th>
+        <th>Costo Mensual</th>
+        <th>Función Principal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Frontend & Hosting</strong></td>
+        <td>Vercel Pro</td>
+        <td>$20 USD (~$26.000 ARS)</td>
+        <td>Despliegue cloud, SSL automático, velocidad móvil &lt;1.5s.</td>
+      </tr>
+      <tr>
+        <td><strong>Base de Datos & Auth</strong></td>
+        <td>Supabase (PostgreSQL)</td>
+        <td>$0 a $25 USD</td>
+        <td>Gestión de catálogo, pedidos en tiempo real y stock.</td>
+      </tr>
+      <tr>
+        <td><strong>Notificaciones WhatsApp</strong></td>
+        <td>Meta Cloud API / VPS dedicado</td>
+        <td>$12 USD (~$15.600 ARS)</td>
+        <td>Envío de confirmaciones, alertas de despacho y GPS.</td>
+      </tr>
+      <tr>
+        <td><strong>Cartografía & Radar</strong></td>
+        <td>OpenStreetMap + Leaflet</td>
+        <td>$0 USD (Open Source)</td>
+        <td>Monitoreo geográfico de zonas de Posadas sin costo por API.</td>
+      </tr>
+      <tr>
+        <td><strong>Dominio Oficial</strong></td>
+        <td>NIC Argentina (.com.ar)</td>
+        <td>$8.500 ARS / año (~$700/mes)</td>
+        <td>Identidad institucional argentina.</td>
+      </tr>
+      <tr>
+        <td><strong>Pasarela de Pago</strong></td>
+        <td>Mercado Pago Checkout Pro</td>
+        <td>5,99% + IVA (por cobro)</td>
+        <td>Sin costo fijo mensual; sólo variable por transacción exitosa.</td>
+      </tr>
+      <tr style="background:#e2e8f0; font-weight:800;">
+        <td colspan="2">TOTAL TECNOLOGÍA MENSUAL</td>
+        <td colspan="2">~$55 USD / mes (Menos de $75.000 ARS)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SALTO DE PÁGINA -->
+  <div class="page-break"></div>
+
+  <!-- SECCIÓN 3 -->
+  <h2>3. Proyección de Tránsito y Flujo de Ventas en Posadas</h2>
+  <p>
+    El mercado de bebidas en Posadas presenta un comportamiento marcado: demanda moderada durante los primeros días de la semana y una concentración masiva entre jueves y domingo por la noche (Costanera, reuniones sociales, asados y quintas).
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Días</th>
+        <th>Horario Pico</th>
+        <th>Entregas / Día</th>
+        <th>Ticket Promedio</th>
+        <th>Facturación Diaria (GMV)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Lunes a Miércoles</strong></td>
+        <td>19:30 a 23:00 hs</td>
+        <td>12 a 18 pedidos</td>
+        <td>$26.000 ARS</td>
+        <td>~$390.000 ARS</td>
+      </tr>
+      <tr>
+        <td><strong>Jueves (Previa)</strong></td>
+        <td>20:00 a 01:00 hs</td>
+        <td>25 a 35 pedidos</td>
+        <td>$29.000 ARS</td>
+        <td>~$870.000 ARS</td>
+      </tr>
+      <tr>
+        <td><strong>Viernes y Sábados</strong></td>
+        <td>20:00 a 03:30 hs</td>
+        <td>65 a 95 pedidos</td>
+        <td>$36.000 ARS</td>
+        <td>~$2.880.000 ARS</td>
+      </tr>
+      <tr>
+        <td><strong>Domingos y Feriados</strong></td>
+        <td>12:00 a 16:00 / 20:00 a 23:30 hs</td>
+        <td>35 a 50 pedidos</td>
+        <td>$32.000 ARS</td>
+        <td>~$1.360.000 ARS</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <div class="highlight-box-title">PROYECCIÓN FINANCIERA MENSUAL CONSOLIDADA (Mes 1 a 3):</div>
+    <ul>
+      <li><strong>Volumen mensual de entregas:</strong> Entre 1.000 y 1.250 pedidos completados.</li>
+      <li><strong>Monto Total de Mercadería Transaccionada (GMV):</strong> <strong>~$35.000.000 ARS</strong>.</li>
+      <li><strong>Ingresos de AXO por Comisión de Venta (12% promedio):</strong> <strong>$4.200.000 ARS</strong>.</li>
+      <li><strong>Ingresos por Margen Logístico ($700 ARS / envío):</strong> <strong>$770.000 ARS</strong>.</li>
+      <li><strong>FACTURACIÓN BRUTA MENSUAL DE LA APP:</strong> <strong>~$4.970.000 ARS / mes</strong>.</li>
+    </ul>
+  </div>
+
+  <!-- SECCIÓN 4 -->
+  <h2>4. Marco Fiscal y Tributario (ARCA / AFIP y ATM Misiones)</h2>
+  <p>
+    En la provincia de Misiones, el esquema impositivo de la <strong>Agencia Tributaria Misiones (ATM)</strong> y las percepciones bancarias (SIRCREB) exigen una estructura prolija para no tributar sobre dinero de terceros:
+  </p>
+  <ul>
+    <li><strong>Régimen Inicial Recomendado:</strong> Monotributo (Categoría E o F) para servicios digitales de intermediación.</li>
+    <li><strong>Qué factura AXO:</strong> Se emite <em>Factura C</em> a la Distribuidora únicamente por el concepto de <strong>"Servicio de Intermediación Digital y Publicidad"</strong> sobre el valor de la comisión retenida. AXO no factura el alcohol.</li>
+    <li><strong>Protección contra SIRCREB:</strong> Al utilizar <em>Mercado Pago Marketplace Split</em>, la pasarela transfiere automáticamente el dinero de la bebida a la cuenta del distribuidor y la comisión a la cuenta de AXO, impidiendo que ATM aplique retenciones sobre el total del pedido.</li>
+  </ul>
+
+  <!-- SECCIÓN 5 -->
+  <h2>5. Mecanismo de Cobro en Efectivo contra Entrega</h2>
+  <p>
+    Aproximadamente el <strong>40% de los compradores en Posadas</strong> solicita pagar en efectivo al recibir el pedido. El sistema operativo funciona de la siguiente manera:
+  </p>
+  <ol>
+    <li>El cliente selecciona "Efectivo al recibir" en el checkout de AXO.</li>
+    <li>El repartidor retira las bebidas en el depósito del comercio con el remito comercial físico correspondiente.</li>
+    <li>El repartidor cobra el total en mano en el domicilio del cliente (costo del producto + envío).</li>
+    <li><strong>Rendición y seguridad:</strong> El repartidor rinde el costo de la bebida al comercio. La comisión de AXO se debita de forma automática del <em>saldo a favor</em> que el cadete posee en la billetera virtual de la app, eliminando el riesgo de cobranza para la plataforma.</li>
+  </ol>
+
+  <!-- SALTO DE PÁGINA -->
+  <div class="page-break"></div>
+
+  <!-- SECCIÓN 6 -->
+  <h2>6. Convenios Comerciales y Logísticos en Posadas</h2>
+  <p>
+    La estrategia de captación inicial no requiere incorporar decenas de empleados directos:
+  </p>
+  <ul>
+    <li><strong>Distribuidoras Aliadas (Deli Drinks, Distribuidora JB, Vinotecas):</strong>
+      Se les ofrece un canal de venta incremental sin costo fijo. Se firma un acuerdo donde el comercio garantiza:
+      (a) Prioridad de despacho en menos de 10 minutos desde recibido el pedido en su panel.
+      (b) Temperatura garantizada (bebidas y hielo con cadena de frío verificada).
+      (c) Stock reservado para la plataforma.
+    </li>
+    <li><strong>Alianza con Agrupaciones de Motomandados de Posadas:</strong>
+      En lugar de reclutar cadetes individuales desde cero, se establece convenio con agencias o grupos organizados de motomandados locales, fijando una tarifa plana competitiva y exigiendo conservadora térmica impermeable de hasta 35 litros.
+    </li>
+  </ul>
+
+  <!-- SECCIÓN 7 -->
+  <h2>7. Presupuesto Mensual Operativo y de Soporte Técnico</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Concepto</th>
+        <th>Detalle del Servicio</th>
+        <th>Presupuesto Mensual</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Infraestructura Cloud</strong></td>
+        <td>Servidor Next.js, base de datos Postgres y WhatsApp API</td>
+        <td>$65 USD (~$85.000 ARS)</td>
+      </tr>
+      <tr>
+        <td><strong>Soporte Técnico & Mantenimiento</strong></td>
+        <td>Monitoreo de uptime, ajustes de catálogo, resolución de incidencias</td>
+        <td>$250 USD (~$325.000 ARS)</td>
+      </tr>
+      <tr>
+        <td><strong>Marketing & Redes Sociales</strong></td>
+        <td>Pauta en Meta Ads (Instagram/TikTok geolocalizada en Posadas, Jue-Dom)</td>
+        <td>$150 USD (~$195.000 ARS)</td>
+      </tr>
+      <tr>
+        <td><strong>Operador de Despacho (Turno Pico)</strong></td>
+        <td>1 persona de guardia para coordinar WhatsApp y demoras (Jue-Dom noche)</td>
+        <td>$180.000 ARS</td>
+      </tr>
+      <tr>
+        <td><strong>Material Gráfico / Packaging</strong></td>
+        <td>Stickers inviolables de seguridad con logo AXO para bolsas y packs</td>
+        <td>$45.000 ARS</td>
+      </tr>
+      <tr style="background:#e2e8f0; font-weight:800;">
+        <td colspan="2">TOTAL MENSUAL ESTIMADO DE OPERACIÓN</td>
+        <td>~$830.000 ARS / mes</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- SECCIÓN 8 -->
+  <h2>8. Hoja de Ruta Inmediata (Roadmap de Lanzamiento)</h2>
+  <ol>
+    <li><strong>Semana 1:</strong> Firma de convenio piloto con 1 distribuidora principal en Posadas y acuerdo con 4 cadetes equipados.</li>
+    <li><strong>Semana 2:</strong> Configuración final de webhook de WhatsApp para confirmaciones automáticas de pedido.</li>
+    <li><strong>Semana 3:</strong> Campaña de expectativa en Instagram ("Tus bebidas frías en 30 min en Posadas") y activación de promociones de bienvenida.</li>
+    <li><strong>Semana 4 (Soft Launch):</strong> Prueba piloto de viernes a domingo en radio restringido (Centro, Villa Sarita y Costanera).</li>
+    <li><strong>Mes 2:</strong> Expansión a Itaembé Miní, Itaembé Guazú y resto del ejido urbano.</li>
+  </ol>
+
+  <div class="footer-sign">
+    <div><strong>AXO Bebidas Express</strong> — Megasion Desarrollos INC.</div>
+    <div>Documento confidencial para uso estratégico y comercial · Posadas, Misiones</div>
+  </div>
+
+</body>
+</html>

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import {
   ShoppingCart, Store, Package, Search, MapPin,
-  Bell, ChevronDown, X, Menu, Zap, User, Check
+  Bell, ChevronDown, X, Menu, Zap, User, Check, FileText
 } from "lucide-react";
 import { MarketView } from "@/components/views/MarketView";
 import { MoveView } from "@/components/views/MoveView";
@@ -165,6 +165,17 @@ function AppShellInner() {
 
           {/* Right actions */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
+            {/* Download proposal PDF */}
+            <a
+              href="/AXO_Propuesta_Estrategica_Bebidas_Posadas.pdf"
+              download="AXO_Propuesta_Estrategica_Bebidas_Posadas.pdf"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-axo-blue-light border border-axo-cyan/30 text-axo-cyan text-xs font-bold hover:bg-axo-cyan hover:text-white transition-all shadow-sm"
+              title="Descargar Propuesta Comercial & Financiera en PDF"
+            >
+              <FileText size={14} />
+              <span>Propuesta PDF</span>
+            </a>
+
             {/* Notifications */}
             <button className="relative p-2.5 rounded-xl hover:bg-axo-bg transition-colors">
               <Bell size={20} className="text-axo-muted" />
@@ -339,7 +350,15 @@ function AppShellInner() {
             <span className="font-black text-axo-text text-sm">AXO Bebidas Express</span>
             <span>· Posadas, Misiones, Argentina</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
+            <a
+              href="/AXO_Propuesta_Estrategica_Bebidas_Posadas.pdf"
+              download="AXO_Propuesta_Estrategica_Bebidas_Posadas.pdf"
+              className="flex items-center gap-1 text-axo-cyan font-bold hover:underline"
+            >
+              <FileText size={13} /> Descargar Informe PDF
+            </a>
+            <span>·</span>
             <span>Deli Drinks / Distribuidora JB</span>
             <span>·</span>
             <span>Consumo responsable (+18)</span>
