@@ -4,7 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import {
   ShoppingCart, Store, Package, Search, MapPin,
-  Bell, ChevronDown, X, Menu, Zap, User, Check, FileText
+  Bell, ChevronDown, X, Menu, User, Check, FileText,
+  LogOut, ShieldCheck, Sparkles, LogIn
 } from "lucide-react";
 import { MarketView } from "@/components/views/MarketView";
 import { MoveView } from "@/components/views/MoveView";
@@ -15,17 +16,21 @@ import { Caso1View } from "@/components/cases/Caso1View";
 import { Caso2View } from "@/components/cases/Caso2View";
 import { Caso3View } from "@/components/cases/Caso3View";
 import { DemoProvider, useDemo } from "@/lib/demoContext";
+import { AuthProvider, useAuth } from "@/lib/authContext";
+import { ProtectedGate } from "@/components/auth/ProtectedGate";
+import { SellerOnboardingModal } from "@/components/auth/SellerOnboardingModal";
+import { DriverOnboardingModal } from "@/components/auth/DriverOnboardingModal";
+import { LoginModal } from "@/components/auth/LoginModal";
 import { ZONAS_POSADAS, DRINK_CATEGORIES } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 type Role = "buyer" | "seller" | "driver";
-type BuyerMode = "market" | "move";
 
 // ── Role tabs ─────────────────────────────────────────────────
 const ROLES = [
-  { key: "buyer" as Role,  icon: <ShoppingCart size={15} />, label: "Comprador",    desc: "Catálogo Express & Delivery", color: "text-axo-cyan" },
-  { key: "seller" as Role, icon: <Store size={15} />,        label: "Distribuidor", desc: "Deli Drinks Posadas",         color: "text-axo-emerald" },
-  { key: "driver" as Role, icon: <Package size={15} />,      label: "Repartidor",   desc: "Logística Express Posadas",   color: "text-purple-700" },
+  { key: "buyer" as Role,  icon: <ShoppingCart size={15} />, label: "Comprador",    desc: "Catálogo Libre & Delivery",   color: "text-axo-cyan" },
+  { key: "seller" as Role, icon: <Store size={15} />,        label: "Distribuidor", desc: "Panel Comercios Aliados",    color: "text-axo-emerald" },
+  { key: "driver" as Role, icon: <Package size={15} />,      label: "Repartidor",   desc: "Red Logística Express",       color: "text-purple-700" },
 ];
 
 // ── Top ticker items ──────────────────────────────────────────
@@ -34,16 +39,26 @@ const TICKER_ITEMS = [
   "🧊 Hielo en cubos disponible · Bebidas 100% frías garantizadas",
   "🚀 Envíos gratis desde $30.000 en toda la ciudad",
   "📱 Pedidos ultrarrápidos con confirmación directa por WhatsApp",
-  "💳 Pagá con MercadoPago, Transferencia o Efectivo al recibir",
-  "🏪 Distribuidor Oficial: Deli Drinks Posadas / Distribuidora JB",
+  "🏪 Sumá tu distribuidora o vinoteca a AXO sin costo fijo",
+  "🛵 Unite a la red de repartidores y cobrá comisiones al instante",
 ];
 
 function AppShellInner() {
   const { activeCase, isDemoActive, caseConfig } = useDemo();
+  const {
+    user,
+    isSellerApproved,
+    isDriverApproved,
+    logout,
+    setLoginModalOpen,
+    setSellerModalOpen,
+    setDriverModalOpen,
+  } = useAuth();
+
   const [activeRole, setActiveRole] = useState<Role>("buyer");
-  const [buyerMode, setBuyerMode] = useState<BuyerMode>("market");
   const [selectedZona, setSelectedZona] = useState<string>("Villa Sarita");
   const [zonaModalOpen, setZonaModalOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
@@ -53,7 +68,6 @@ function AppShellInner() {
   useEffect(() => {
     if (!caseConfig) return;
     setActiveRole(caseConfig.role);
-    if (caseConfig.buyerMode) setBuyerMode(caseConfig.buyerMode);
     setMobileMenuOpen(false);
   }, [caseConfig]);
 
@@ -164,39 +178,99 @@ function AppShellInner() {
           </div>
 
           {/* Right actions */}
-          <div className="flex items-center gap-1.5 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0">
             {/* Download proposal PDF */}
             <a
               href="/AXO_Propuesta_Estrategica_Bebidas_Posadas.pdf"
               download="AXO_Propuesta_Estrategica_Bebidas_Posadas.pdf"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-axo-blue-light border border-axo-cyan/30 text-axo-cyan text-xs font-bold hover:bg-axo-cyan hover:text-white transition-all shadow-sm"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-axo-blue-light border border-axo-cyan/30 text-axo-cyan text-xs font-bold hover:bg-axo-cyan hover:text-white transition-all shadow-sm"
               title="Descargar Propuesta Comercial & Financiera en PDF"
             >
               <FileText size={14} />
               <span>Propuesta PDF</span>
             </a>
 
-            {/* Notifications */}
-            <button className="relative p-2.5 rounded-xl hover:bg-axo-bg transition-colors">
-              <Bell size={20} className="text-axo-muted" />
-              <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500" />
-            </button>
+            {/* Auth / Account Profile Button */}
+            <div className="relative">
+              {user ? (
+                /* Usuario Autenticado / En revisión */
+                <button
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl hover:bg-axo-bg transition-colors border border-axo-border bg-white"
+                >
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-br from-axo-cyan to-axo-emerald flex items-center justify-center text-white text-xs font-black">
+                    {user.name.charAt(0)}
+                  </div>
+                  <div className="text-left hidden sm:block">
+                    <p className="text-xs font-bold text-axo-text truncate max-w-[120px]">
+                      {user.businessName || user.name}
+                    </p>
+                    <span className={cn(
+                      "text-[9px] font-bold px-1.5 py-0.2 rounded-full inline-block leading-tight",
+                      user.status === "approved"
+                        ? "bg-axo-emerald-light text-axo-emerald"
+                        : "bg-amber-100 text-amber-800"
+                    )}>
+                      {user.status === "approved" ? "Verificado" : "En Revisión"}
+                    </span>
+                  </div>
+                  <ChevronDown size={13} className="text-axo-muted" />
+                </button>
+              ) : (
+                /* Invitado / Fricción Cero */
+                <button
+                  onClick={() => setLoginModalOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-axo-border hover:border-axo-cyan hover:bg-axo-blue-light/50 text-xs font-bold text-axo-text transition-all"
+                >
+                  <LogIn size={14} className="text-axo-cyan" />
+                  <span className="hidden sm:inline">Ingresar / Cuenta</span>
+                </button>
+              )}
 
-            {/* Avatar */}
-            <button className="flex items-center gap-2 pl-2 pr-3 py-2 rounded-xl hover:bg-axo-bg transition-colors border border-axo-border">
-              <div className="w-7 h-7 rounded-full bg-axo-gradient flex items-center justify-center">
-                <User size={14} className="text-white" />
-              </div>
-              <span className="hidden sm:block text-xs font-semibold text-axo-text">Mi cuenta</span>
-              <ChevronDown size={13} className="text-axo-muted" />
-            </button>
+              {/* Dropdown del perfil */}
+              {userDropdownOpen && user && (
+                <div className="absolute right-0 top-full mt-2 w-56 bg-white border border-axo-border rounded-2xl shadow-axo-card-lg p-3 z-50 animate-slide-up">
+                  <div className="px-2 py-1.5 border-b border-axo-border mb-2">
+                    <p className="text-xs font-bold text-axo-text truncate">{user.name}</p>
+                    <p className="text-[10px] text-axo-muted truncate">{user.email}</p>
+                    {user.businessName && (
+                      <p className="text-[10px] text-axo-cyan font-semibold mt-0.5">🏪 {user.businessName}</p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <button
+                      onClick={() => {
+                        setActiveRole(user.role);
+                        setUserDropdownOpen(false);
+                      }}
+                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-medium text-axo-text hover:bg-axo-bg transition-colors text-left"
+                    >
+                      <ShieldCheck size={14} className="text-axo-emerald" />
+                      <span>Ir a mi Panel ({user.role === "seller" ? "Distribuidor" : "Repartidor"})</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setUserDropdownOpen(false);
+                        setActiveRole("buyer");
+                      }}
+                      className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-medium text-red-600 hover:bg-red-50 transition-colors text-left"
+                    >
+                      <LogOut size={14} />
+                      <span>Cerrar sesión</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Mobile menu */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2.5 rounded-xl hover:bg-axo-bg transition-colors"
+              className="md:hidden p-2 rounded-xl hover:bg-axo-bg transition-colors border border-axo-border"
             >
-              {mobileMenuOpen ? <X size={20} className="text-axo-text" /> : <Menu size={20} className="text-axo-text" />}
+              {mobileMenuOpen ? <X size={18} className="text-axo-text" /> : <Menu size={18} className="text-axo-text" />}
             </button>
           </div>
         </div>
@@ -239,10 +313,20 @@ function AppShellInner() {
               </div>
             )}
 
-            {/* Badge de Entrega Fría */}
-            <div className="hidden lg:flex items-center gap-2 ml-auto text-xs font-bold text-axo-emerald bg-axo-emerald-light border border-axo-emerald/20 px-3 py-1.5 rounded-xl">
-              <span className="w-2 h-2 rounded-full bg-axo-emerald animate-pulse" />
-              <span>Entrega Fría en ~30 min</span>
+            {/* CTAs rápidos de incorporación */}
+            <div className="hidden lg:flex items-center gap-2 ml-auto">
+              <button
+                onClick={() => setSellerModalOpen(true)}
+                className="text-xs font-bold text-axo-cyan hover:bg-axo-blue-light px-3 py-1.5 rounded-xl transition-all"
+              >
+                + Sumar Comercio
+              </button>
+              <button
+                onClick={() => setDriverModalOpen(true)}
+                className="text-xs font-bold text-purple-700 hover:bg-purple-50 px-3 py-1.5 rounded-xl transition-all"
+              >
+                + Ser Repartidor
+              </button>
             </div>
           </div>
         </div>
@@ -270,6 +354,29 @@ function AppShellInner() {
               </button>
             ))}
 
+            {/* Mobile CTAs */}
+            <div className="pt-2 border-t border-axo-border flex flex-col gap-2">
+              <p className="text-[10px] text-axo-muted uppercase tracking-wider font-semibold">Alianzas Comerciales</p>
+              <button
+                onClick={() => {
+                  setSellerModalOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="py-2.5 px-3 rounded-xl bg-axo-blue-light text-axo-cyan font-bold text-xs text-left"
+              >
+                🏪 ¿Querés sumar tu comercio o distribuidora?
+              </button>
+              <button
+                onClick={() => {
+                  setDriverModalOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="py-2.5 px-3 rounded-xl bg-purple-50 text-purple-700 font-bold text-xs text-left"
+              >
+                🛵 ¿Te sumás como repartidor express?
+              </button>
+            </div>
+
             {/* Mobile zone selector */}
             <div className="pt-2 border-t border-axo-border">
               <p className="text-[10px] text-axo-muted uppercase tracking-wider font-semibold mb-2">Zona en Posadas</p>
@@ -277,7 +384,10 @@ function AppShellInner() {
                 {ZONAS_POSADAS.map((z) => (
                   <button
                     key={z}
-                    onClick={() => setSelectedZona(z)}
+                    onClick={() => {
+                      setSelectedZona(z);
+                      setMobileMenuOpen(false);
+                    }}
                     className={cn(
                       "py-1.5 px-2 rounded-lg text-xs font-medium text-left border transition-all truncate",
                       selectedZona === z
@@ -311,14 +421,24 @@ function AppShellInner() {
         </div>
       )}
 
-      {/* ── MAIN CONTENT ─────────────────────────────────────── */}
+      {/* ── MAIN CONTENT (CONTROLES DE ACCESO / RBAC GUARDS) ─── */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
         {isDemoActive && activeCase === "caso1" && <Caso1View />}
         {isDemoActive && activeCase === "caso2" && <Caso2View />}
         {isDemoActive && activeCase === "caso3" && <Caso3View />}
+        
+        {/* Vista Comprador: 100% Abierta y Fricción Cero */}
         {!isDemoActive && activeRole === "buyer" && <MarketView />}
-        {!isDemoActive && activeRole === "seller" && <SellerView />}
-        {!isDemoActive && activeRole === "driver" && <DriverView />}
+
+        {/* Vista Vendedor/Distribuidor: Protegida por Auth y Aprobación */}
+        {!isDemoActive && activeRole === "seller" && (
+          isSellerApproved ? <SellerView /> : <ProtectedGate role="seller" />
+        )}
+
+        {/* Vista Repartidor: Protegida por Auth y Verificación */}
+        {!isDemoActive && activeRole === "driver" && (
+          isDriverApproved ? <DriverView /> : <ProtectedGate role="driver" />
+        )}
       </main>
 
       {/* ── BOTTOM MOBILE NAV ────────────────────────────────── */}
@@ -340,6 +460,11 @@ function AppShellInner() {
         </div>
       </nav>
 
+      {/* ── MODALES GLOBALES DE AUTENTICACIÓN Y ONBOARDING ───── */}
+      <SellerOnboardingModal />
+      <DriverOnboardingModal />
+      <LoginModal />
+
       {/* ── FOOTER ───────────────────────────────────────────── */}
       <footer className="border-t border-axo-border bg-white mt-auto py-8">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-axo-muted">
@@ -359,7 +484,13 @@ function AppShellInner() {
               <FileText size={13} /> Descargar Informe PDF
             </a>
             <span>·</span>
-            <span>Deli Drinks / Distribuidora JB</span>
+            <button onClick={() => setSellerModalOpen(true)} className="hover:text-axo-cyan transition-colors">
+              Sumar mi Comercio
+            </button>
+            <span>·</span>
+            <button onClick={() => setDriverModalOpen(true)} className="hover:text-purple-700 transition-colors">
+              Ser Repartidor
+            </button>
             <span>·</span>
             <span>Consumo responsable (+18)</span>
             <span>·</span>
@@ -373,8 +504,10 @@ function AppShellInner() {
 
 export function AppShell() {
   return (
-    <DemoProvider>
-      <AppShellInner />
-    </DemoProvider>
+    <AuthProvider>
+      <DemoProvider>
+        <AppShellInner />
+      </DemoProvider>
+    </AuthProvider>
   );
 }

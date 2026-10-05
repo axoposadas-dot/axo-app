@@ -9,8 +9,9 @@ import { useState, useMemo } from "react";
 import {
   Search, MapPin, ChevronDown, Clock, Truck, Star,
   ShoppingCart, Plus, Minus, X, Check, ChevronRight,
-  Zap, MessageCircle, CreditCard, Package,
+  Zap, MessageCircle, CreditCard, Package, ArrowRight,
 } from "lucide-react";
+import { useAuth } from "@/lib/authContext";
 import {
   allDrinkProducts, getCategoryProducts, DRINK_CATEGORIES,
   ZONAS_POSADAS, formatARS, type DrinkProduct, type DrinkCategory,
@@ -451,6 +452,7 @@ function CheckoutModal({
 
 // ── Main MarketView ───────────────────────────────────────────
 export function MarketView() {
+  const { setSellerModalOpen, setDriverModalOpen } = useAuth();
   const [activeCategory, setActiveCategory] = useState<DrinkCategory | "todos">("todos");
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -595,6 +597,75 @@ export function MarketView() {
           </div>
         </div>
       )}
+
+      {/* ── ALIANZAS ESTRATÉGICAS Y ACCESO A LA RED (CTAs B2B / COURIERS) ──────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Card 1: Comercios y Distribuidoras */}
+        <div className="bg-gradient-to-br from-blue-50/90 to-indigo-50/60 border border-blue-200/80 rounded-3xl p-5 flex flex-col justify-between shadow-axo-card hover:shadow-axo-card-md transition-all">
+          <div className="flex items-start gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-axo-cyan text-white flex items-center justify-center text-xl flex-shrink-0 shadow-sm">
+              🏪
+            </div>
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-wider bg-blue-200/80 text-blue-900 px-2 py-0.5 rounded-full">
+                PARA COMERCIOS & DISTRIBUIDORAS
+              </span>
+              <h3 className="font-black text-axo-text text-base mt-1 leading-snug">
+                ¿Querés sumar tu comercio o distribuidora a AXO?
+              </h3>
+              <p className="text-xs text-axo-muted mt-1 leading-relaxed">
+                Vendé tus bebidas frías, hielo y combos las 24 horas sin costo fijo. Recibí pedidos ya cobrados y delegá el delivery.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-blue-200/60 flex items-center justify-between">
+            <span className="text-[11px] font-bold text-axo-cyan">
+              ⚡ Habilitación en 24–48 hs
+            </span>
+            <button
+              onClick={() => setSellerModalOpen(true)}
+              className="py-2 px-3.5 rounded-xl bg-axo-cyan hover:bg-axo-cyan-dim text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 active:scale-95"
+            >
+              <span>Sumar mi Comercio</span>
+              <ArrowRight size={13} />
+            </button>
+          </div>
+        </div>
+
+        {/* Card 2: Repartidores Express */}
+        <div className="bg-gradient-to-br from-purple-50/90 to-fuchsia-50/60 border border-purple-200/80 rounded-3xl p-5 flex flex-col justify-between shadow-axo-card hover:shadow-axo-card-md transition-all">
+          <div className="flex items-start gap-3.5">
+            <div className="w-11 h-11 rounded-2xl bg-purple-600 text-white flex items-center justify-center text-xl flex-shrink-0 shadow-sm">
+              🛵
+            </div>
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-wider bg-purple-200/80 text-purple-900 px-2 py-0.5 rounded-full">
+                RED DE CADETERÍA & LOGÍSTICA
+              </span>
+              <h3 className="font-black text-axo-text text-base mt-1 leading-snug">
+                ¿Te sumás como repartidor de AXO? Mejores comisiones
+              </h3>
+              <p className="text-xs text-axo-muted mt-1 leading-relaxed">
+                Generá ingresos con tu moto o auto en Posadas. Tarifas competitivas por entrega, 100% de tus propinas y liquidación diaria.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-purple-200/60 flex items-center justify-between">
+            <span className="text-[11px] font-bold text-purple-700">
+              💰 Cobros diarios en mano
+            </span>
+            <button
+              onClick={() => setDriverModalOpen(true)}
+              className="py-2 px-3.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-1.5 active:scale-95"
+            >
+              <span>Quiero ser Repartidor</span>
+              <ArrowRight size={13} />
+            </button>
+          </div>
+        </div>
+      </div>
 
       {/* ── PRODUCT GRID ─────────────────────────────────────── */}
       <div>
