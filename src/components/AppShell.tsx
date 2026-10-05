@@ -4,8 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import {
   ShoppingCart, Store, Package, Search, MapPin,
-  Bell, ChevronDown, X, Menu, User, Check, FileText,
-  LogOut, ShieldCheck, Sparkles, LogIn
+  Bell, ChevronDown, X, Menu, User, Check,
+  MessageCircle, LogOut, ShieldCheck, Sparkles, LogIn
 } from "lucide-react";
 import { MarketView } from "@/components/views/MarketView";
 import { MoveView } from "@/components/views/MoveView";
@@ -179,15 +179,16 @@ function AppShellInner() {
 
           {/* Right actions */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            {/* Download proposal PDF */}
+            {/* WhatsApp AXO Express */}
             <a
-              href="/AXO_Propuesta_Estrategica_Bebidas_Posadas.pdf"
-              download="AXO_Propuesta_Estrategica_Bebidas_Posadas.pdf"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-axo-blue-light border border-axo-cyan/30 text-axo-cyan text-xs font-bold hover:bg-axo-cyan hover:text-white transition-all shadow-sm"
-              title="Descargar Propuesta Comercial & Financiera en PDF"
+              href="https://wa.me/543751561710?text=Hola%20AXO%20Express%2C%20quiero%20hacer%20un%20pedido%20🍺"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-green-50 border border-green-300 text-green-700 text-xs font-bold hover:bg-green-600 hover:text-white hover:border-green-600 transition-all shadow-sm"
+              title="Contactar AXO Express por WhatsApp"
             >
-              <FileText size={14} />
-              <span>Propuesta PDF</span>
+              <MessageCircle size={14} />
+              <span>WhatsApp AXO</span>
             </a>
 
             {/* Auth / Account Profile Button */}
@@ -375,6 +376,15 @@ function AppShellInner() {
               >
                 🛵 ¿Te sumás como repartidor express?
               </button>
+              <a
+                href="https://wa.me/543751561710?text=Hola%20AXO%20Express%2C%20quiero%20hacer%20un%20pedido%20🍺"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileMenuOpen(false)}
+                className="py-2.5 px-3 rounded-xl bg-green-50 text-green-700 font-bold text-xs text-left flex items-center gap-2"
+              >
+                <MessageCircle size={14} /> Contactar por WhatsApp
+              </a>
             </div>
 
             {/* Mobile zone selector */}
@@ -460,6 +470,18 @@ function AppShellInner() {
         </div>
       </nav>
 
+      {/* ── WHATSAPP FAB (Flotante) ───────────────────────────── */}
+      <a
+        href="https://wa.me/543751561710?text=Hola%20AXO%20Express%2C%20quiero%20hacer%20un%20pedido%20🍺"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-20 right-4 z-50 md:bottom-6 md:right-6 w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95"
+        title="Escribir a AXO Express por WhatsApp"
+        aria-label="Contactar por WhatsApp"
+      >
+        <MessageCircle size={26} />
+      </a>
+
       {/* ── MODALES GLOBALES DE AUTENTICACIÓN Y ONBOARDING ───── */}
       <SellerOnboardingModal />
       <DriverOnboardingModal />
@@ -477,11 +499,12 @@ function AppShellInner() {
           </div>
           <div className="flex items-center gap-4 flex-wrap">
             <a
-              href="/AXO_Propuesta_Estrategica_Bebidas_Posadas.pdf"
-              download="AXO_Propuesta_Estrategica_Bebidas_Posadas.pdf"
-              className="flex items-center gap-1 text-axo-cyan font-bold hover:underline"
+              href="https://wa.me/543751561710?text=Hola%20AXO%20Express%2C%20quiero%20hacer%20un%20pedido%20🍺"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-green-700 font-bold hover:underline"
             >
-              <FileText size={13} /> Descargar Informe PDF
+              <MessageCircle size={13} /> WhatsApp AXO
             </a>
             <span>·</span>
             <button onClick={() => setSellerModalOpen(true)} className="hover:text-axo-cyan transition-colors">
